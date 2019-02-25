@@ -17,26 +17,32 @@ describe(`Requires a Directory with all the modules inside, by default files nam
     {
       message:`It skips "index.js" files and those who end with ".test.js"`,
       args: {
-        pathOfFolderToRequire:join(__dirname, '..', 'sanitizer', 'sanitizers','/'),
+        pathOfFolderToRequire:join(__dirname, '..', 'sanitizer', 'NpmPackage','/'),
       },
       expected: {
-        packageNameNPM:'',
-        packageNPM:'',
-        packageVersionNPM:'',
+        length:3,
       }
     },
     {
       message:`It includes all '.js' files, including tests`,
       args: {
-        pathOfFolderToRequire:join(__dirname, '..', 'sanitizer', 'sanitizers','/'),
+        pathOfFolderToRequire:join(__dirname, '..', 'sanitizer', 'NpmPackage','/'),
         includeRegex : '.js',
         excludeRegex : 'NONE.test.js'
       },
       expected: {
-        packageNameNPM:'',
-        'packageNameNPM.test':'',
-        packageNPM:'',
-        packageVersionNPM:'',
+        length:5,
+      }
+    },
+    {
+      message:`It includes all 'test.js' files`,
+      args: {
+        pathOfFolderToRequire:join(__dirname, '..', 'sanitizer', 'NpmPackage','/'),
+        includeRegex : 'test.js',
+        excludeRegex : 'NONE.test.js'
+      },
+      expected: {
+        length:1,
       }
     },
   ];
@@ -44,7 +50,7 @@ describe(`Requires a Directory with all the modules inside, by default files nam
   tests.forEach(function(test) {
     it(`${test.message} expecting: '${JSON.stringify(test.expected)}' `, function() {
       let res = requireContext(test.args);
-      assert.strictEqual(Object.keys(res).length, Object.keys(test.expected).length);
+      assert.strictEqual(Object.keys(res).length, test.expected.length);
     });
   });
 });

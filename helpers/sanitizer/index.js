@@ -1,8 +1,10 @@
 import {requireContext} from '../requireContext'
 const t = requireContext({
-	pathOfFolderToRequire:`${__dirname}/sanitizers/`,
-	includeRegex : '.js',
-	 // excludeRegex : 'todo.test.js'
+	pathOfFolderToRequire:`${__dirname}/NpmPackage/`,
+	includeRegex : 'index.js',
+	excludeRegex : 'test.js'
 });
+console.log(t)
 
-module.exports=t;
+module.exports={npm:t.index};
+// export default t;
