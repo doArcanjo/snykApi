@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@keyv/redis": "github:bahmutov/keyv-redis#5850d5999ca897ba832c751c0574d77c7b566034",
     "body-parser": "~1.18.3",
     "cors": "~2.8.5",
     "cross-env": "~5.2.0",
@@ -29,10 +30,11 @@
     "node-fetch": "~2.3.0"
   },
   "devDependencies": {
+    "benchmark": "^2.1.4",
     "coveralls": "~3.0.2",
     "mocha": "~5.2.0",
     "nyc": "~13.3.0",
-    "supertest": "~3.4.2",
-    "snyk": "~1.130.0"
+    "snyk": "~1.130.0",
+    "supertest": "~3.4.2"
   }
 }
