@@ -20,7 +20,7 @@ router.get('/', function(req,res,next){
 router.get('/package', function(req,res,next){
 	log(`I´m @ npmSearch package`)
 	return res.json(controller.getAll(req.params,next));
-});
+});	
 
 router.get("/package/:name/:version?",requestsCache(10), async (req, res, next) => {
    let result = await controller

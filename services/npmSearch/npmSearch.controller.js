@@ -3,16 +3,16 @@
 // ----------------------------
 
 const debug = require('debug');
-const path = require('path');
 const npmSearchDAL = require('./npmSearch.dal');
 const sleep = require('../../helpers/sleep');
 const fetch = require('../../helpers/fetch');
-const {packageNPM} = require ('../../helpers/sanitizer');
+const {npm} = require ('../../helpers/sanitizer');
 const NPM_REGISTRY = process.env.NPM_REGISTRY;
-const flatCache = require('flat-cache');
+// const flatCache = require('flat-cache');
+var npmSearchCache =require ('../../helpers/cache');
 
 const log = debug('controllers:npmSearch');
-var npmSearchCache = flatCache.load('npmSearchCache') //,path.resolve('./helpers/cache/db'));
+// var npmSearchCache = flatCache.load('npmSearchCache') //,path.resolve('./helpers/cache/db'));
 
 // ----------------------------
 //  CONTROLLER
@@ -25,15 +25,16 @@ const getPackageInfo = async ({name, version, depthLevel}) => {
         return {name, version};
     }
 
-    let npmPackage = packageNPM({name,version});
+    let npmPackage = npm.packageNPM({name,version});
     let ret={
          name,
          version:npmPackage.version
     };
+
     let res;
-    let cacheValue = npmSearchCache.getKey( `${npmPackage.name}__${npmPackage.version}`);
+    let cacheValue = npmSearchCache.getKey( `${npmPackage.hash}`);
     if (cacheValue){
-        console.error(`From cache: ${npmPackage.name}__${npmPackage.version}!`)
+        console.error(`From cache: ${npmPackage.hash}!`)
         res = cacheValue;
     }
     else {
@@ -41,7 +42,7 @@ const getPackageInfo = async ({name, version, depthLevel}) => {
         let url = `${NPM_REGISTRY}${npmPackage.name}/${npmPackage.version}`
         log(`@ getPackageInfo url: ${url}`)
         res = await fetch({url, transactionId: 2121});
-        npmSearchCache.setKey( `${npmPackage.name}__${npmPackage.version}`, 
+        npmSearchCache.setKey( `${npmPackage.hash}`, 
         {
             name:npmPackage.name, 
             version:npmPackage.version, 
@@ -50,7 +51,11 @@ const getPackageInfo = async ({name, version, depthLevel}) => {
                 devDependencies:res.data.devDependencies
             }
         }); 
-        npmSearchCache.save();  
+        try{
+          npmSearchCache.save();    
+      }catch(err){
+        console.error("Cant save cache", err)
+      } 
 
     }
 
@@ -97,9 +102,7 @@ const getPackageInfoSlow = async ({name, version, depthLevel}) => {
         return {name, version};
     }
     //if ()
-    let npmPackage = packageNPM({name,version});
-    console.error(npmPackage)
-    console.log(`Package name:${name} ver${npmPackage.version}`)
+    let npmPackage = npm.packageNPM({name,version});
     //let packageVersion = version ? `/${npmPackage.version}`: `/latest`;   
     let url = `${NPM_REGISTRY}${npmPackage.name}/${npmPackage.version}`
     log(`@ getPackageInfo url: ${url}`)
@@ -166,7 +169,8 @@ const getSingle = (ctx, next) => {
 
 const npmSearchController = {
     getAll:getAll,
-    getPackageInfo:getPackageInfo
+    getPackageInfo:getPackageInfo,
+    getPackageInfoSlow:getPackageInfoSlow,
 }; 
 
 module.exports = npmSearchController;

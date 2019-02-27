@@ -4,7 +4,6 @@ const t = requireContext({
 	includeRegex : 'index.js',
 	excludeRegex : 'test.js'
 });
-console.log(t)
 
 module.exports={npm:t.index};
 // export default t;

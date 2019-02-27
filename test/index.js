@@ -5,13 +5,13 @@ dotenv.config('../.env');
 require('../app.test.js')
 /**/
 
-/* Helpers */
-// require('../helpers/sanitizer/sanitizer.test.js')
+/* Helpers * /
+require('../helpers/sanitizer/sanitizer.test.js')
 require('../helpers/requireContext/requireContext.test.js')
 /**/
 
 
 /* Services */
-// require('../services/npmSearch/npmSearch.route.test.js')
+ require('../services/npmSearch/npmSearch.route.test.js')
 
 /**/

@@ -6,6 +6,7 @@
   "scripts": {
     "start": "cross-env DEBUG=server,express,controllers,helpers:* node -r esm ./bin/www",
     "test": "mocha --timeout 10000",
+    "test-parallel": "mocha-parallel-tests --timeout 10000 ../snyk2/**/*.test.js",
     "nyc": "nyc --reporter=html --reporter=text mocha",
     "dependencies-security-audit": "snyk monitor",
     "coverage": "nyc report --reporter=text-lcov | coveralls"
@@ -30,9 +31,10 @@
     "node-fetch": "~2.3.0"
   },
   "devDependencies": {
-    "benchmark": "^2.1.4",
+    "benchmark": "~2.1.4",
     "coveralls": "~3.0.2",
-    "mocha": "~5.2.0",
+    "mocha": "^5.2.0",
+    "mocha-parallel-tests": "^2.0.6-alpha.3",
     "nyc": "~13.3.0",
     "snyk": "~1.130.0",
     "supertest": "~3.4.2"
